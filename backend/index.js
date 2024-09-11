@@ -17,6 +17,8 @@ const io = new Server(server, {
 app.use(cors())
 
 const PORT = process.env.PORT;
+
+// we have to intgrate the users arrays that are joined in the room 
  
  io.on("connection", (socket) => {
   console.log("User id is", socket.id);
