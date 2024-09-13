@@ -4,7 +4,6 @@ import {createServer} from "node:http"
 import {Server} from "socket.io"
 import cors from "cors"
 import {EVENT} from "./Actions.js"
-import { timeStamp } from "node:console"
 
 const app = express();
 const server = createServer(app);
@@ -63,21 +62,41 @@ io.on("connection", (socket) => {
 
   // on code sync
 
+  socket.on(EVENT.ON_CODE_SYNC, ({code, socketId}) => {
+    io.to(socketId).emit(EVENT.ON_CODE_SYNC, {code});
+  })
+
+  //on code change
+
+  socket.on(EVENT.CODE_CHANGE, ({roomId, code}) => {
+    io.to(roomId).emit(EVENT.CODE_CHANGE, {code});
+
+  })
+
   // on disconnecting
+  socket.on("disconnecting", () => {
+    const room = [...socket.rooms];
+    console.log("rooms", room);
+
+    room.forEach((roomId) => {
+      socket.in(roomId).emit(EVENT.DISCONNECTED, {
+        id: socket.id,
+        username: userObj[socket.id]
+      })
+    })
+
+    delete userObj[socket.id]
+    socket.leave();
+
+
+  })
 
   //on vedio call 
 
-  //sync code for newly joined user 
+  //on vedio answer
 })
 
 
-
-
-
- io.on("connection", (socket) => {
-  console.log("User id is", socket.id);
-  socket.emit('welcome', `Welcome to the chat server${socket.id}`)
- })
  
  server.listen(PORT, () => {
   console.log(`Server is up and running in ${PORT}` )

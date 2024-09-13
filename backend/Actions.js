@@ -5,5 +5,8 @@ export const EVENT = {
   DISCONNECTED: "disconnected",
   LEAVE: "leave",
   JOINED: "joined",
-  GROUP_CHAT: "group_chat"
+  GROUP_CHAT: "group_chat",
+  CODE_CHANGE:"code_change",
+  ON_VEDIO_OFFER:"on_vedio_offer",
+  ON_VEDIO_ANSWER:"on_vedio_answer"
 }
