@@ -34,10 +34,11 @@ const getAllConnectedUsers = (roomId) => {
 }
 
 io.on("connection", (socket) => {
+  
   socket.on(EVENT.JOIN, ({roomId, username}) => {
+    
     userObj[socket.id] = username;
     const users = getAllConnectedUsers(roomId);
-    console.log("this is users", users)
     // we can iterate the getAllConnected user array of object
     users.forEach(({ socketId }) => {
       io.to(socketId).emit(EVENT.JOINED, {
@@ -46,6 +47,12 @@ io.on("connection", (socket) => {
         socketId: socket.id
       })
     })
+  })
+
+  socket.on("chat", (payload) => {
+    console.log("what is payload: ", payload);
+    console.log("what is socket__id", socket.id)
+    io.emit("chat", payload);
   })
   
   // send message to all the users 
@@ -91,13 +98,9 @@ io.on("connection", (socket) => {
 
   })
 
-  //on vedio call 
 
-  //on vedio answer
 })
 
-
- 
  server.listen(PORT, () => {
   console.log(`Server is up and running in ${PORT}` )
  })
