@@ -10,5 +10,6 @@ export const EVENT = {
   ON_VEDIO_OFFER:"on_vedio_offer",
   ON_VEDIO_ANSWER:"on_vedio_answer",
   ON_USER_TYPING: "typing..",
-  ON_USER_STOP_TYPING: "stop_typing"
+  ON_USER_STOP_TYPING: "stop_typing",
+  SOCKET_ERROR_EVENT:"socketerror"
 }

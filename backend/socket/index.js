@@ -1,10 +1,10 @@
 // this is utility function that ensures that makes sockets intances from the server
 
-import { EVENT } from "../Actions"
+import { EVENT } from "../Actions.js"
 import cookie from "cookie"
-import { ApiError } from "../Utils/ApiError";
+import { ApiError } from "../Utils/ApiError.js";
 import jwt from "jsonwebtoken"
-import User from "../Models/User.Model";
+import User from "../Models/User.Model.js";
 
 
 const mountJoinChatEvent = (socket) => {
@@ -67,16 +67,29 @@ const initializeSocketIO = (io) => {
 
       //onDisconnect event 
 
+      socket.on(EVENT.DISCONNECTED, () => {
+        console.log("user has been disconnected successfully !", socket.user?._id);
+        if(socket.user?._id) {
+          socket.leave(socket.user?._id);
+        }
+      })
+
 
     }catch(err) {
+      //error event
+      socket.emit(EVENT.SOCKET_ERROR_EVENT, "Something went wrong or network error")
       console.log("Error connecting the socket......", err);
 
     }
   })
+}
+
+const emitSocketEmit = (req, roomId,event, payload) => {
+  req.app.get("io").in(roomId).emit(event, payload);
 
 }
 
-export {initializeSocketIO}
+export {initializeSocketIO, emitSocketEmit}
 
 
 
