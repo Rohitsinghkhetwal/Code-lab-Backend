@@ -56,3 +56,91 @@ export const Signup = AsyncHandler(async(req, res) => {
   return res.status(200).json(new ApiResponse(DatabaseEntry, "User Registered successfully !"))
 })
 
+export const Login = AsyncHandler(async(req, res) => {
+  const {email, password} = req.body;
+
+  if(!(email || password)) {
+    throw new ApiError(400, "Email or Password required !")
+  }
+
+  const result = await User.findOne({email});
+
+  if(!result) {
+    throw new ApiError(401, "User does not exist");
+  }
+
+  const comparePassword = await bcypt.compare(password, result.password);
+
+  const options = {
+    httpOnly: true,
+    secure: true,
+  }
+
+  if(comparePassword){
+    const JwtToken = GenerateJwtToken(result._id);
+    const refreshToken = GenerateRefreshToken(result._id);
+    return res
+    .status(200)
+    .cookie("jwtToken", JwtToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json({refreshToken,
+      user: {
+        _id: result._id,
+        username: result.username,
+        email: result.email
+      },
+      message: "User Logged In successfully !"
+    })
+  }
+})
+
+
+export const VerifyEmail = AsyncHandler(async(req, res) => {
+  const { code } = req.body;
+
+  const ExistingUser = await User.findOne({
+    verificationToken: code
+  })
+
+  if(!ExistingUser) {
+    throw new ApiError(400, "Expired or Invalid varification code")
+  }
+
+  ExistingUser.isVerified = true;
+  ExistingUser.verificationToken = undefined;
+  await ExistingUser.save();
+
+  return res.status(200).json({
+    message: "User verified successfully !",
+    user: {
+      ...ExistingUser._doc,
+      password: undefined,
+    }
+  })
+})
+
+
+
+export const Logout = AsyncHandler(async(req, res) => {
+  await User.findByIdAndUpdate(req.AuthorizedUser._id, {
+    $set: {
+      RefreshToken: undefined
+    }
+  },
+  {
+    new: true
+  }
+);
+
+const options = {
+  httpOnly: true,
+  secure: true,
+ }
+
+ return res.status(200)
+ .clearCookie("jwtToken", options)
+ .clearCookie("refreshToken", options)
+ .json(new ApiResponse(200, {}, "User Logged Out Success !"))
+
+})
+

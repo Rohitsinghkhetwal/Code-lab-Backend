@@ -1,6 +1,7 @@
 import express from "express"
 import 'dotenv/config'
 import {createServer} from "node:http"
+import cookieParser from "cookie-parser"
 import {Server} from "socket.io"
 import cors from "cors"
 import { initializeSocketIO } from "./socket/index.js"
@@ -19,6 +20,7 @@ const io = new Server(server, {
 
 app.use(cors())
 app.use(express.json());
+app.use(cookieParser());
 
 const PORT = process.env.PORT;
 app.set("io", io);

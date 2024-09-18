@@ -33,6 +33,10 @@ const UserSchema = new mongoose.Schema({
   AccessToken: {
     type: String,
   },
+  isVerified: {
+    type: Boolean,
+    default: false
+  }
 },
 {
   timestamps:true
