@@ -5,6 +5,7 @@ import {Server} from "socket.io"
 import cors from "cors"
 import { initializeSocketIO } from "./socket/index.js"
 import ConnectDB from "./database/Connection.js"
+import userRoutes from "./Routes/user.routes.js"
 
 const app = express();
 const server = createServer(app);
@@ -17,12 +18,15 @@ const io = new Server(server, {
 });
 
 app.use(cors())
+app.use(express.json());
 
 const PORT = process.env.PORT;
 app.set("io", io);
 
 ConnectDB();
 //we have created the socket io initializer wrapper utility
+
+app.use("/api/v1/users", userRoutes);
 
 initializeSocketIO(io);
 

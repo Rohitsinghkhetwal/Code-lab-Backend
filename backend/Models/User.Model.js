@@ -24,12 +24,15 @@ const UserSchema = new mongoose.Schema({
       localPath: "",
     },
   },
+  verificationToken: {
+    type: String,
+  },
   RefreshToken: {
     type: String,
   },
   AccessToken: {
     type: String,
-  }
+  },
 },
 {
   timestamps:true
