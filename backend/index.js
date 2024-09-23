@@ -6,7 +6,7 @@ import {Server} from "socket.io"
 import cors from "cors"
 import { initializeSocketIO } from "./socket/index.js"
 import ConnectDB from "./database/Connection.js"
-import userRoutes from "./Routes/user.routes.js"
+import userRoutes from "./routes/user.routes.js"
 
 const app = express();
 const server = createServer(app);

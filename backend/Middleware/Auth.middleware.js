@@ -20,7 +20,6 @@ export const verifyAuth = AsyncHandler(async(req, _, next) => {
 
     const decodedJwt = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const myUser = await User.findById(decodedJwt._id).select("-password -RefreshToken");
-    console.log("THIS IS user from auth", myUser);
 
 
     if(!myUser) {
@@ -28,6 +27,7 @@ export const verifyAuth = AsyncHandler(async(req, _, next) => {
     }
 
     req.AuthorizedUser = myUser;
+    
     next();
 
   }catch(err) {

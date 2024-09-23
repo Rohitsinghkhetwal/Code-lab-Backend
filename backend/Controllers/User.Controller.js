@@ -5,6 +5,7 @@ import bcypt from "bcrypt"
 import { ApiResponse } from "../Utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
 import { SendVerificationEmail } from "../Email/Email.js";
+import { uploadCloudinary } from "../Middleware/Cloudnary.js";
 
 const GenerateJwtToken = (_id) => {
   const token = jwt.sign({_id}, process.env.ACCESS_TOKEN_SECRET, {
@@ -19,6 +20,8 @@ const GenerateRefreshToken = (_id) => {
   })
   return result;
 }
+
+// Signup api
 
 export const Signup = AsyncHandler(async(req, res) => {
   // sign up logic here => 
@@ -41,6 +44,9 @@ export const Signup = AsyncHandler(async(req, res) => {
   const passwordHash = await bcypt.hash(password, 12);
   const verificationToken = Math.floor(1000000 + Math.random() * 9000000).toString();
 
+  // we have to set cookies here also 
+
+
 
   const DatabaseEntry = await User.create({
     username,
@@ -49,12 +55,14 @@ export const Signup = AsyncHandler(async(req, res) => {
     verificationToken
   })
 
-  await SendVerificationEmail(DatabaseEntry.email, verificationToken);
+  //await SendVerificationEmail(DatabaseEntry.email, verificationToken);
 
   console.log("users from user controller", DatabaseEntry);
 
   return res.status(200).json(new ApiResponse(DatabaseEntry, "User Registered successfully !"))
 })
+
+// login api 
 
 export const Login = AsyncHandler(async(req, res) => {
   const {email, password} = req.body;
@@ -87,12 +95,14 @@ export const Login = AsyncHandler(async(req, res) => {
       user: {
         _id: result._id,
         username: result.username,
-        email: result.email
+        email: result.email,
       },
       message: "User Logged In successfully !"
     })
   }
 })
+
+// api for verify email
 
 
 export const VerifyEmail = AsyncHandler(async(req, res) => {
@@ -119,6 +129,7 @@ export const VerifyEmail = AsyncHandler(async(req, res) => {
   })
 })
 
+// api for logout 
 
 
 export const Logout = AsyncHandler(async(req, res) => {
@@ -144,3 +155,40 @@ const options = {
 
 })
 
+//api for upload image 
+
+export const uploadImage = AsyncHandler(async(req, res) => {
+  const userId = req.AuthorizedUser;
+  // avatar local path is the path of the file 
+
+  const avatarLocalPath = req.files?.avatar[0]?.path;
+  console.log("avatar path", avatarLocalPath)
+  // now we have to send this path to cloudinary
+  if(!avatarLocalPath) {
+    throw new ApiError(400, "File path is required here !");
+  }
+
+  const uploadToCloudinary = await uploadCloudinary(avatarLocalPath);
+  console.log("upload cloudinary object here !", uploadToCloudinary)
+
+  if(!uploadToCloudinary) {
+    throw new ApiError(400, "Api is required ");
+  }
+
+  //now we will save to database or edit it
+
+  const databaseEntry = await User.findByIdAndUpdate(userId._id, {
+    $set: {
+      avatar: {
+        url: uploadToCloudinary.url || "",
+        localPath: avatarLocalPath
+      }
+    }
+  },{
+    new: true
+  }).select("-password -verificationToken");
+
+  return res.status(200).json(new ApiResponse(200, databaseEntry,"Profile picture updated successfully !"))
+})
+  
+  
