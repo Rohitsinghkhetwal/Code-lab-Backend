@@ -59,7 +59,12 @@ export const Signup = AsyncHandler(async(req, res) => {
 
   console.log("users from user controller", DatabaseEntry);
 
-  return res.status(200).json(new ApiResponse(DatabaseEntry, "User Registered successfully !"))
+  return res.status(200).json(new ApiResponse({
+    username: DatabaseEntry.username,
+    email: DatabaseEntry.email,
+    avatar: DatabaseEntry.avatar,
+    isVerified: DatabaseEntry.isVerified,
+  }, "User Registered successfully !"))
 })
 
 // login api 
