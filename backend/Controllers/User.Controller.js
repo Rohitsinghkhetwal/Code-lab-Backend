@@ -4,7 +4,6 @@ import {ApiError} from "../Utils/ApiError.js"
 import bcypt from "bcrypt"
 import { ApiResponse } from "../Utils/ApiResponse.js";
 import jwt from "jsonwebtoken";
-import { SendVerificationEmail } from "../Email/Email.js";
 import { uploadCloudinary } from "../Middleware/Cloudnary.js";
 
 const GenerateJwtToken = (_id) => {

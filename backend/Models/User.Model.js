@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+export const RoleEnum = ['VIEWER', 'HOST', 'EDITOR'];
+
 const UserSchema = new mongoose.Schema({
   username: {
     type: String,
@@ -10,6 +12,31 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  documents: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Document',
+    }
+  ],
+  session: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Session'
+    }
+  ],
+  rooms: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Room"
+    }
+  ],
+  permission: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Permission",
+    }
+
+  ],
   password: {
     type: String,
     required: [true, "Password is required !"]

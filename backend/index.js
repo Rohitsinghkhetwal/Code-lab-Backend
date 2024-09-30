@@ -7,6 +7,7 @@ import cors from "cors"
 import { initializeSocketIO } from "./socket/index.js"
 import ConnectDB from "./database/Connection.js"
 import userRoutes from "./routes/user.routes.js"
+import roomRoutes from "./routes/room.routes.js"
 
 const app = express();
 const server = createServer(app);
@@ -29,6 +30,7 @@ ConnectDB();
 //we have created the socket io initializer wrapper utility
 
 app.use("/api/v1/users", userRoutes);
+app.use("/api/v1/room", roomRoutes)
 
 initializeSocketIO(io);
 
