@@ -4,7 +4,6 @@ import { generateRandomString } from "../Utils/ids.js";
 export const createNewRoom = async(req, res) => {
   try {
     const newRoomId = generateRandomString(40);
-    console.log("this is a newRoomId", newRoomId)
     const result = await Room.create({
         link: newRoomId,
         users: [],
@@ -18,9 +17,10 @@ export const createNewRoom = async(req, res) => {
   }
 }
 
-// join room 
+// Add user to room
 export const joinRoom = async(req, res) => {
-  const { userId, roomId} = req.body;
+  const { roomId } = req.params;
+  const { userId, username} = req.body;
   try {
     // we can find it if it is in the room or not 
     const result = await Room.findOne({ link: roomId});
@@ -68,7 +68,7 @@ export const leaveRoom = async(req, res) => {
 
 // getRoomDetails
 
-export const getRoomDetails = async() => {
+export const getRoomDetails = async(req, res) => {
   const { roomId } = req.params;
   try {
 
