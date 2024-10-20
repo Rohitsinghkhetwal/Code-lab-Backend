@@ -4,17 +4,16 @@ const RoomSchema = mongoose.Schema({
   link: { 
     type: String,
      unique: true,
-      required: true,
-       maxlength: 255 
+      required: true, 
     },
   document: {
-     type: Schema.Types.ObjectId,
+     type: mongoose.Schema.Types.ObjectId,
       ref: "Document",
-       required: true 
+       
     }, 
   users: [
     {
-     type: Schema.Types.ObjectId,
+     type: mongoose.Schema.Types.ObjectId,
       ref: "User" 
     }
   ], 
@@ -34,5 +33,5 @@ const RoomSchema = mongoose.Schema({
     },
 });
 
-const Room = mongoose.Model('Room', RoomSchema);
+const Room = mongoose.model('Room', RoomSchema);
 export default Room;

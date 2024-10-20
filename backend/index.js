@@ -11,17 +11,14 @@ import roomRoutes from "./routes/room.routes.js"
 
 const app = express();
 const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: "*",
-    methods: ["GET", "POST"],
-    credentials: true,
-  }
-});
-
-app.use(cors())
-app.use(express.json());
+const io = new Server(server);
 app.use(cookieParser());
+app.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true
+}))
+app.use(express.json());
+
 
 const PORT = process.env.PORT;
 app.set("io", io);

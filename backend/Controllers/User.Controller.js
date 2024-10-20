@@ -13,12 +13,12 @@ const GenerateJwtToken = (_id) => {
   return token;
 }
 
-const GenerateRefreshToken = (_id) => {
-  const result = jwt.sign({_id}, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRY
-  })
-  return result;
-}
+// const GenerateRefreshToken = (_id) => {
+//   const result = jwt.sign({_id}, process.env.REFRESH_TOKEN_SECRET, {
+//     expiresIn: process.env.REFRESH_TOKEN_EXPIRY
+//   })
+//   return result;
+// }
 
 // Signup api
 
@@ -86,16 +86,15 @@ export const Login = AsyncHandler(async(req, res) => {
   const options = {
     httpOnly: true,
     secure: true,
+    sameSite: "None"
   }
 
   if(comparePassword){
     const JwtToken = GenerateJwtToken(result._id);
-    const refreshToken = GenerateRefreshToken(result._id);
     return res
     .status(200)
     .cookie("jwtToken", JwtToken, options)
-    .cookie("refreshToken", refreshToken, options)
-    .json({refreshToken,
+    .json({
       user: {
         _id: result._id,
         username: result.username,
@@ -139,7 +138,7 @@ export const VerifyEmail = AsyncHandler(async(req, res) => {
 export const Logout = AsyncHandler(async(req, res) => {
   await User.findByIdAndUpdate(req.AuthorizedUser._id, {
     $set: {
-      RefreshToken: undefined
+      AccessToken: undefined
     }
   },
   {
@@ -150,6 +149,7 @@ export const Logout = AsyncHandler(async(req, res) => {
 const options = {
   httpOnly: true,
   secure: true,
+  sameSite: "none"
  }
 
  return res.status(200)

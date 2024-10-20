@@ -54,9 +54,6 @@ const UserSchema = new mongoose.Schema({
   verificationToken: {
     type: String,
   },
-  RefreshToken: {
-    type: String,
-  },
   AccessToken: {
     type: String,
   },
