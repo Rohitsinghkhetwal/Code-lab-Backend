@@ -13,9 +13,14 @@ const RoomSchema = mongoose.Schema({
     }, 
   users: [
     {
-     type: mongoose.Schema.Types.ObjectId,
-      ref: "User" 
-    }
+     userId : {
+      type: String,
+     },
+     username: {
+      type: String,
+     }
+    },
+    
   ], 
   isRoomActive: {
      type: Boolean,
