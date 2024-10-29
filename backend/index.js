@@ -8,6 +8,7 @@ import { initializeSocketIO } from "./socket/index.js"
 import ConnectDB from "./database/Connection.js"
 import userRoutes from "./routes/user.routes.js"
 import roomRoutes from "./routes/room.routes.js"
+import validateUser from "./routes/validator.routes.js"
 
 const app = express();
 const server = createServer(app);
@@ -28,6 +29,7 @@ ConnectDB();
 
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/room", roomRoutes)
+app.use("/api/v1/validator", validateUser)
 
 initializeSocketIO(io);
 
