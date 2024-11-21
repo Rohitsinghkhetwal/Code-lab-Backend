@@ -6,8 +6,8 @@ const router = Router();
 
 router.route("/create-room").post( verifyAuth, createNewRoom);
 router.route("/join-room/:roomId").post(verifyAuth, joinRoom);
-router.route("/leave-room").post(verifyAuth, leaveRoom);
-router.route("/getAll-room/:roomId").get(verifyAuth, getRoomDetails)
+router.route("/leave-room").post( verifyAuth, leaveRoom);
+router.route("/getAll-room/:roomId").get(getRoomDetails)
 
 
 

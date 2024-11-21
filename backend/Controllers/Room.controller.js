@@ -1,5 +1,8 @@
 import Room from "../Models/Room.model.js";
+import User from "../Models/User.Model.js";
 import { generateRandomString } from "../Utils/ids.js";
+
+
 
 export const createNewRoom = async (req, res) => {
   try {
@@ -27,6 +30,7 @@ export const joinRoom = async (req, res) => {
   try {
     // we can find it if it is in the room or not
     const result = await Room.findOne({ link: roomId });
+    console.log("this is the result from join room", result);
 
     if (!result) {
       return res.status(400).json({ error: "Room not found" });
@@ -34,10 +38,22 @@ export const joinRoom = async (req, res) => {
 
     if (userId) {
       // we will check the user that it is present in database or not
-      const existingUser = result.users.find((user) => user.userId === userId);
-      if (!existingUser) {
-        result.users.push({ userId, username: null });
+
+      const user = await User.findById(userId);
+     
+
+      if(!user) {
+        return res.status(400).json({message: "User not found !"});
       }
+
+      const existingUser = result.users.find((user) => user.userId === userId);
+      console.log("USER ID FOUND", existingUser);
+
+      if (!existingUser) {
+        result.users.push({userId, username: user.username});
+      }
+
+
     } else if (username) {
       // we will check if username will be there !
       const UserName = result.users.find((user) => user.username === username);
@@ -47,7 +63,9 @@ export const joinRoom = async (req, res) => {
         result.users.push({ username, userId: null });
       }
     }
+
     await result.save();
+
     return res
       .status(200)
       .json({ message: "User added the room successfully !" });
@@ -56,6 +74,8 @@ export const joinRoom = async (req, res) => {
     return res.status(400).json({ message: "Error in creating the room" });
   }
 };
+
+
 
 export const leaveRoom = async (req, res) => {
   const { userId, roomId } = req.body;
