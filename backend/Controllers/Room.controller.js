@@ -49,6 +49,8 @@ export const joinRoom = async (req, res) => {
       const existingUser = result.users.find((user) => user.userId === userId);
       console.log("USER ID FOUND", existingUser);
 
+      // some logic here 
+
       if (!existingUser) {
         result.users.push({userId, username: user.username});
       }
@@ -81,6 +83,7 @@ export const leaveRoom = async (req, res) => {
   const { userId, roomId } = req.body;
   try {
     const findRoom = await Room.findOne({ link: roomId });
+    console.log('findRoom', JSON.stringify(findRoom, null, 2))
 
     if (!findRoom) {
       return res.status(400).json({ message: "Room not found !" });

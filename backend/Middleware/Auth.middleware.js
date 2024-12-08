@@ -30,6 +30,7 @@ export const verifyAuth = AsyncHandler(async(req, _, next) => {
     next();
 
   }catch(err) {
+    console.log("no access token found --")
     throw new ApiError(401, "Invalid Access token or Unathorized !")
   }
 })
