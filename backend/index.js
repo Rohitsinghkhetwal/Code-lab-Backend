@@ -96,7 +96,6 @@ io.on("connection", (socket) => {
 
   // user when disconnects 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
 
     for(const roomId in rooms ) {
       rooms[roomId] = rooms[roomId].filter((user) => user.socketId !== socket.id);
