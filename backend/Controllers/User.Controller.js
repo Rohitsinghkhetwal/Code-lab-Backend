@@ -13,15 +13,6 @@ const GenerateJwtToken = (_id) => {
   return token;
 }
 
-// const GenerateRefreshToken = (_id) => {
-//   const result = jwt.sign({_id}, process.env.REFRESH_TOKEN_SECRET, {
-//     expiresIn: process.env.REFRESH_TOKEN_EXPIRY
-//   })
-//   return result;
-// }
-
-// Signup api
-
 export const Signup = AsyncHandler(async(req, res) => {
   // sign up logic here => 
   const {username, email, password} = req.body;
@@ -53,10 +44,6 @@ export const Signup = AsyncHandler(async(req, res) => {
     password: passwordHash,
     verificationToken
   })
-
-  //await SendVerificationEmail(DatabaseEntry.email, verificationToken);
-
-  console.log("users from user controller", DatabaseEntry);
 
   return res.status(200).json(new ApiResponse({
     username: DatabaseEntry.username,
@@ -166,14 +153,14 @@ export const uploadImage = AsyncHandler(async(req, res) => {
   // avatar local path is the path of the file 
 
   const avatarLocalPath = req.files?.avatar[0]?.path;
-  console.log("avatar path", avatarLocalPath)
+  
   // now we have to send this path to cloudinary
   if(!avatarLocalPath) {
     throw new ApiError(400, "File path is required here !");
   }
 
   const uploadToCloudinary = await uploadCloudinary(avatarLocalPath);
-  console.log("upload cloudinary object here !", uploadToCloudinary)
+ 
 
   if(!uploadToCloudinary) {
     throw new ApiError(400, "Api is required ");

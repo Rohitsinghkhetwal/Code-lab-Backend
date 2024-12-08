@@ -41,21 +41,19 @@ app.use("/api/v1/validator", validateUser);
 const rooms = {};
 
 io.on("connection", (socket) => {
-  console.log("User connected ", socket.id);
 
   //join a room
   socket.on("join-room", ({ roomId, userId = null, username = null }) => {
     if (!userId && username) {
-      console.log("User must provide either username and userId");
       return;
     }
 
-    console.log(`user ${userId || username} joined room ${roomId}`);
+    
 
     // add the user to room
     if (!rooms[roomId]) {
       rooms[roomId] = [];
-      console.log("room is not found in socket");
+      
     }
 
     const existingUser = rooms[roomId].find(
@@ -63,7 +61,7 @@ io.on("connection", (socket) => {
     );
 
     if (existingUser) {
-      console.log(`user ${userId || username} is already in the room`);
+      
     
     } else {
       rooms[roomId].push({

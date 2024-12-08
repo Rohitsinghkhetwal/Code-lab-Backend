@@ -12,13 +12,9 @@ export const createNewRoom = async (req, res) => {
       users: [],
     });
 
-    console.log(
-      "this is result from createRoom api",
-      JSON.stringify(result, null, 2)
-    );
     return res.status(200).json({ result: result });
   } catch (err) {
-    console.log("something went wrong while creating the room", err);
+    
     return res.status(400).json({ message: "Error while creating the room" });
   }
 };
@@ -30,7 +26,7 @@ export const joinRoom = async (req, res) => {
   try {
     // we can find it if it is in the room or not
     const result = await Room.findOne({ link: roomId });
-    console.log("this is the result from join room", result);
+   
 
     if (!result) {
       return res.status(400).json({ error: "Room not found" });
@@ -47,7 +43,7 @@ export const joinRoom = async (req, res) => {
       }
 
       const existingUser = result.users.find((user) => user.userId === userId);
-      console.log("USER ID FOUND", existingUser);
+      
 
       // some logic here 
 
@@ -59,7 +55,7 @@ export const joinRoom = async (req, res) => {
     } else if (username) {
       // we will check if username will be there !
       const UserName = result.users.find((user) => user.username === username);
-      console.log("this is the username", UserName);
+     
 
       if (!UserName) {
         result.users.push({ username, userId: null });
@@ -72,7 +68,7 @@ export const joinRoom = async (req, res) => {
       .status(200)
       .json({ message: "User added the room successfully !" });
   } catch (err) {
-    console.log("something went worng !", err);
+    
     return res.status(400).json({ message: "Error in creating the room" });
   }
 };
@@ -83,7 +79,7 @@ export const leaveRoom = async (req, res) => {
   const { userId, roomId } = req.body;
   try {
     const findRoom = await Room.findOne({ link: roomId });
-    console.log('findRoom', JSON.stringify(findRoom, null, 2))
+    
 
     if (!findRoom) {
       return res.status(400).json({ message: "Room not found !" });
@@ -93,7 +89,7 @@ export const leaveRoom = async (req, res) => {
 
     await findRoom.save();
 
-    console.log(" leaving room", findRoom.users);
+    
 
     return res.status(200).json({ message: "User removed from the room" });
   } catch (err) {
