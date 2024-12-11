@@ -13,14 +13,15 @@ const app = express();
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://curious-bavarois-44328d.netlify.app",
+    origin: "https://6759ed947e2f820008387881--curious-bavarois-44328d.netlify.app",
     methods: ["GET", "POST"]
   }
 })
 app.use(cookieParser());
+//https://curious-bavarois-44328d.netlify.app
 app.use(
   cors({
-    origin: "https://curious-bavarois-44328d.netlify.app",
+    origin: "https://6759ed947e2f820008387881--curious-bavarois-44328d.netlify.app",
     credentials: true,
   })
 );
