@@ -28,7 +28,7 @@ export const Signup = AsyncHandler(async(req, res) => {
   })
 
   if(existingUser) {
-    throw new ApiError(400, "User already exist !")
+    res.status(400).json({message: "username already taken"});
   }
 
   const passwordHash = await bcypt.hash(password, 12);

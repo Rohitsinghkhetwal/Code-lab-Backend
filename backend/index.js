@@ -18,7 +18,6 @@ const io = new Server(server, {
   }
 })
 app.use(cookieParser());
-//https://curious-bavarois-44328d.netlify.app
 app.use(
   cors({
     origin: "https://6759ed947e2f820008387881--curious-bavarois-44328d.netlify.app",
